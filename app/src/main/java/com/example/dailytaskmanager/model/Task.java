@@ -4,21 +4,25 @@ public class Task {
     private String name;
     private String time;
 
-    public Task(String name, String time) {
-        this.name = name;
+    public Task() {
+
+    }
+
+    public Task(String time, String name) {
         this.time = time;
+        this.name = name;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getTime() {
-        return time;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTime() {
+        return time;
     }
 
     public void setTime(String time) {

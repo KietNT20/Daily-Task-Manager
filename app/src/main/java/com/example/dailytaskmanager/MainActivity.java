@@ -15,7 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements TaskAdapter.OnTaskListener {
-    private ActivityMainBinding binding;
+    public static final String EXTRA_TASK_NAME = "taskName";
+    public static final String EXTRA_TASK_TIME = "taskTime";
+    public static final String EXTRA_POSITION = "position";
+
     private List<Task> taskList;
     private TaskAdapter taskAdapter;
 
@@ -23,9 +26,9 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnTas
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    String taskName = result.getData().getStringExtra("taskName");
-                    String taskTime = result.getData().getStringExtra("taskTime");
-                    int position = result.getData().getIntExtra("position", -1);
+                    String taskName = result.getData().getStringExtra(EXTRA_TASK_NAME);
+                    String taskTime = result.getData().getStringExtra(EXTRA_TASK_TIME);
+                    int position = result.getData().getIntExtra(EXTRA_POSITION, -1);
 
                     if (taskName != null && taskTime != null) {
                         if (position != -1) {
@@ -33,12 +36,13 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnTas
                             Task task = taskList.get(position);
                             task.setName(taskName);
                             task.setTime(taskTime);
+                            taskAdapter.notifyItemChanged(position);
                         } else {
                             // Add new task
                             Task newTask = new Task(taskName, taskTime);
                             taskList.add(newTask);
+                            taskAdapter.notifyItemInserted(taskList.size() - 1);
                         }
-                        taskAdapter.notifyDataSetChanged();
                     }
                 }
             }
@@ -47,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnTas
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        com.example.dailytaskmanager.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         taskList = new ArrayList<>();
@@ -66,9 +70,9 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.OnTas
     public void onTaskEdit(int position) {
         Task task = taskList.get(position);
         Intent intent = new Intent(MainActivity.this, AddTaskActivity.class);
-        intent.putExtra("taskName", task.getName());
-        intent.putExtra("taskTime", task.getTime());
-        intent.putExtra("position", position);
+        intent.putExtra(EXTRA_TASK_NAME, task.getName());
+        intent.putExtra(EXTRA_TASK_TIME, task.getTime());
+        intent.putExtra(EXTRA_POSITION, position);
         taskLauncher.launch(intent);
     }
 

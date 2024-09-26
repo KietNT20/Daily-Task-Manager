@@ -11,7 +11,13 @@ import com.example.dailytaskmanager.databinding.ActivityAddTaskBinding;
 
 import java.util.Locale;
 
+
 public class AddTaskActivity extends AppCompatActivity {
+
+    public static final String EXTRA_TASK_NAME = "taskName";
+    public static final String EXTRA_TASK_TIME = "taskTime";
+    public static final String EXTRA_POSITION = "position";
+
     private ActivityAddTaskBinding binding;
     private int editPosition = -1;
 
@@ -22,25 +28,29 @@ public class AddTaskActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         // Check if editing an existing task
-        String taskName = getIntent().getStringExtra("taskName");
-        String taskTime = getIntent().getStringExtra("taskTime");
-        editPosition = getIntent().getIntExtra("position", -1);
+        String taskName = getIntent().getStringExtra(EXTRA_TASK_NAME);
+        String taskTime = getIntent().getStringExtra(EXTRA_TASK_TIME);
+        editPosition = getIntent().getIntExtra(EXTRA_POSITION, -1);
 
-        if (taskName != null && taskTime != null) {
+        if (taskName != null) {
             binding.taskNameEditText.setText(taskName);
-            setTimePickerFromString(taskTime);
-            binding.addTaskButton.setText("Save");
         }
 
+        if (taskTime != null) {
+            setTimePickerFromString(taskTime);
+        }
+        if (editPosition != -1){
+            binding.addTaskButton.setText(R.string.save);
+        }
         binding.addTaskButton.setOnClickListener(v -> {
             String newTaskName = binding.taskNameEditText.getText().toString().trim();
             String newTaskTime = getTimeFromPicker();
 
             if (!TextUtils.isEmpty(newTaskName)) {
                 Intent resultIntent = new Intent();
-                resultIntent.putExtra("taskName", newTaskName);
-                resultIntent.putExtra("taskTime", newTaskTime);
-                resultIntent.putExtra("position", editPosition);
+                resultIntent.putExtra(EXTRA_TASK_NAME, newTaskName);
+                resultIntent.putExtra(EXTRA_TASK_TIME, newTaskTime);
+                resultIntent.putExtra(EXTRA_POSITION, editPosition);
                 setResult(RESULT_OK, resultIntent);
                 finish();
             } else {

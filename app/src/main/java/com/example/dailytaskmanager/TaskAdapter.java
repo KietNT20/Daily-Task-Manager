@@ -13,8 +13,8 @@ import com.example.dailytaskmanager.model.Task;
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
-    private List<Task> taskList;
-    private OnTaskListener onTaskListener;
+    private final List<Task> taskList;
+    private final OnTaskListener onTaskListener;
 
     public TaskAdapter(List<Task> taskList, OnTaskListener onTaskListener) {
         this.taskList = taskList;
@@ -39,8 +39,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return taskList.size();
     }
 
-    class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private ItemTaskBinding binding;
+    public static class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private final ItemTaskBinding binding;
         OnTaskListener onTaskListener;
 
         public TaskViewHolder(ItemTaskBinding binding, OnTaskListener onTaskListener) {

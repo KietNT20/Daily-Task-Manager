@@ -8,9 +8,9 @@ public class Task {
 
     }
 
-    public Task(String time, String name) {
-        this.time = time;
+    public Task(String name, String time) {
         this.name = name;
+        this.time = time;
     }
 
     public String getName() {
